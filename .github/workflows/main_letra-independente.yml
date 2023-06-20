@@ -23,22 +23,22 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ./src --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/src/src.csproj
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
       
       - name: dotnet install
         run: dotnet tool install -g dotnet-ef
       
       - name: dotnet bundle migration
-        run: dotnet ef migrations bundle --runtime linux-x64 -p src/src.csproj -o ${{env.DOTNET_ROOT}}/src/migrate
+        run: dotnet ef migrations bundle --runtime linux-x64 -p ./src/src.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/src/src.csproj
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
